@@ -1,244 +1,604 @@
-let channels = [];
-
-let favorites =
-JSON.parse(
-    localStorage.getItem("favorites")
-) || [];
-
-const container =
-document.getElementById("channels");
-
-let player;
-
-// Load Channels
-async function loadChannels() {
-
-    const response =
-    await fetch("channels.json");
-
-    channels =
-    await response.json();
-
-    renderChannels(channels);
-
-    renderFavorites();
-
-    if (channels.length > 0) {
-
-        playChannel(channels[0].url);
-
-        document.getElementById(
-            "currentChannel"
-        ).innerText =
-        channels[0].name;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
 }
 
-// Render Channels
-function renderChannels(list) {
+body{
 
-    container.innerHTML = "";
+background:
 
-    list.forEach(channel => {
+radial-gradient(
+circle at top left,
+#00e5ff22,
+transparent 25%
+),
 
-        const card =
-        document.createElement("div");
+radial-gradient(
+circle at top right,
+#7c3aed22,
+transparent 25%
+),
 
-        card.className =
-        "channel-card";
+radial-gradient(
+circle at bottom,
+#ff006e22,
+transparent 25%
+),
 
-        card.innerHTML = `
+#030712;
 
-            <button class="favorite-btn">
-                ❤️
-            </button>
-
-            <img src="${channel.logo}" alt="${channel.name}">
-
-            <div class="channel-name">
-                ${channel.name}
-            </div>
-
-        `;
-
-        const favBtn =
-        card.querySelector(".favorite-btn");
-
-        favBtn.onclick = (e) => {
-
-            e.stopPropagation();
-
-            toggleFavorite(channel);
-
-        };
-
-        card.onclick = () => {
-
-            playChannel(channel.url);
-
-            document.getElementById(
-                "currentChannel"
-            ).innerText =
-            channel.name;
-        };
-
-        container.appendChild(card);
-    });
+color:white;
 }
 
-// Toggle Favorite
-function toggleFavorite(channel) {
+/* NAVBAR */
 
-    const exists =
-    favorites.find(
-        ch => ch.name === channel.name
+.navbar{
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    font-size:32px;
+    font-weight:700;
+    color:#00e5ff;
+    text-shadow:0 0 20px #00e5ff;
+}
+
+#search{
+    width:300px;
+    padding:12px;
+    border:none;
+    outline:none;
+    border-radius:12px;
+    background:#121b2f;
+    color:white;
+}
+
+/* HERO */
+
+.hero{
+
+    height:380px;
+
+    margin:20px;
+
+    border-radius:30px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        135deg,
+        #00e5ff22,
+        #7c3aed33,
+        #ff006e22
+    ),
+    radial-gradient(
+        circle at top right,
+        #00e5ff55,
+        transparent 30%
+    ),
+    radial-gradient(
+        circle at bottom left,
+        #7c3aed55,
+        transparent 35%
+    ),
+    #0b1220;
+
+    display:flex;
+    align-items:center;
+}
+
+.hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    right:-150px;
+    top:-100px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle,
+        #00e5ff33,
+        transparent 70%
     );
 
-    if (exists) {
+    filter:blur(40px);
+}
 
-        favorites =
-        favorites.filter(
-            ch => ch.name !== channel.name
-        );
+.hero-overlay{
 
-    } else {
+    position:relative;
 
-        favorites.push(channel);
-    }
+    z-index:2;
 
-    localStorage.setItem(
-        "favorites",
-        JSON.stringify(favorites)
+    padding:60px;
+}
+
+.hero-tag{
+
+    display:inline-block;
+
+    background:#ff0033;
+
+    padding:8px 15px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    margin-bottom:20px;
+}
+
+.hero h1{
+
+    font-size:60px;
+
+    line-height:1.1;
+
+    margin-bottom:15px;
+
+    font-weight:800;
+}
+
+.hero p{
+
+    font-size:20px;
+
+    opacity:.8;
+
+    margin-bottom:25px;
+}
+
+.watch-btn{
+
+    border:none;
+
+    padding:15px 30px;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    background:
+    linear-gradient(
+        45deg,
+        #00e5ff,
+        #7c3aed
     );
 
-    renderFavorites();
+    box-shadow:
+    0 0 25px rgba(0,229,255,.35);
 }
 
-// Render Favorites
-function renderFavorites() {
+.watch-btn:hover{
 
-    const favContainer =
-    document.getElementById("favorites");
+    transform:translateY(-2px);
 
-    favContainer.innerHTML = "";
-
-    favorites.forEach(channel => {
-
-        const card =
-        document.createElement("div");
-
-        card.className =
-        "channel-card";
-
-        card.innerHTML = `
-
-            <img src="${channel.logo}" alt="${channel.name}">
-
-            <div class="channel-name">
-                ${channel.name}
-            </div>
-
-        `;
-
-        card.onclick = () => {
-
-            playChannel(channel.url);
-
-            document.getElementById(
-                "currentChannel"
-            ).innerText =
-            channel.name;
-        };
-
-        favContainer.appendChild(card);
-    });
+    transition:.3s;
 }
 
-let hls;
-
-function playChannel(url){
-
-    const video =
-    document.getElementById("video");
-
-    if(hls){
-        hls.destroy();
-    }
-
-    if(Hls.isSupported()){
-
-        hls = new Hls({
-            enableWorker: true
-        });
-
-        hls.loadSource(url);
-
-        hls.attachMedia(video);
-
-        hls.on(
-            Hls.Events.MANIFEST_PARSED,
-            function(){
-
-                video.play()
-                .catch(()=>{});
-
-            }
-        );
-
-    }else if(
-        video.canPlayType(
-            "application/vnd.apple.mpegurl"
-        )
-    ){
-
-        video.src = url;
-
-        video.play()
-        .catch(()=>{});
-
-    }
+.hero-overlay{
+    padding:60px;
 }
 
-// Search
-document
-.getElementById("search")
-.addEventListener("keyup", e => {
+.hero h1{
+    font-size:55px;
+    font-weight:800;
+}
 
-    const text =
-    e.target.value.toLowerCase();
+.hero p{
+    margin-top:10px;
+    font-size:18px;
+    opacity:.85;
+}
 
-    const filtered =
-    channels.filter(channel =>
+.watch-btn{
+    margin-top:20px;
 
-        channel.name
-        .toLowerCase()
-        .includes(text)
+    padding:14px 30px;
 
+    border:none;
+    border-radius:15px;
+
+    background:
+    linear-gradient(
+        45deg,
+        #00e5ff,
+        #7c3aed
     );
 
-    renderChannels(filtered);
-});
-
-// Category Filter
-function filterCategory(category) {
-
-    if (category === "All") {
-
-        renderChannels(channels);
-
-        return;
-    }
-
-    const filtered =
-    channels.filter(
-
-        channel =>
-        channel.category === category
-
-    );
-
-    renderChannels(filtered);
+    color:white;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
 }
 
-// Start App
-loadChannels();
+/* PLAYER */
+
+.player-container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+video{
+    width:100%;
+    height:auto;
+
+    object-fit:contain;
+
+    background:black;
+
+    border-radius:25px;
+
+    box-shadow:
+    0 0 40px rgba(0,229,255,.25);
+}
+
+.player-info{
+    padding:15px 5px;
+}
+
+.live-badge{
+    background:#ff0033;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+#currentChannel{
+    margin-top:12px;
+    font-size:28px;
+}
+
+/* CATEGORY */
+
+.categories{
+    display:flex;
+    gap:10px;
+    padding:20px;
+    flex-wrap:wrap;
+}
+
+.categories button{
+    padding:10px 20px;
+
+    background:#111827;
+
+    border:none;
+    border-radius:12px;
+
+    color:white;
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.categories button:hover{
+    background:#00e5ff;
+    color:black;
+}
+
+/* SECTION */
+
+.section-title{
+    padding:30px;
+    font-size:24px;
+    font-weight:700;
+}
+
+/* CHANNEL GRID */
+
+.channel-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fill,minmax(220px,1fr));
+
+    gap:20px;
+
+    padding:20px;
+}
+
+/* CARD */
+
+.channel-card{
+
+    background:
+    linear-gradient(
+        145deg,
+        #101827,
+        #0b1220
+    );
+
+    border:1px solid #1d2940;
+
+    border-radius:25px;
+
+    padding:25px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:.35s;
+}
+
+.channel-card:hover{
+
+    transform:
+    translateY(-8px)
+    scale(1.03);
+
+    border-color:#00e5ff;
+
+    box-shadow:
+    0 0 30px rgba(0,229,255,.25);
+}
+
+.channel-card img{
+    width:80px;
+    height:80px;
+    object-fit:contain;
+}
+
+.channel-name{
+    margin-top:15px;
+    font-weight:600;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .navbar{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    #search{
+        width:100%;
+    }
+
+    .hero{
+        height:250px;
+    }
+
+    .hero h1{
+        font-size:32px;
+    }
+
+    .hero-overlay{
+        padding:25px;
+    }
+
+}
+
+.favorite-btn{
+
+    position:absolute;
+
+    top:10px;
+
+    right:10px;
+
+    background:none;
+
+    border:none;
+
+    color:white;
+
+    font-size:20px;
+
+    cursor:pointer;
+}
+
+#favorites{
+    display:flex;
+    gap:20px;
+    overflow-x:auto;
+    padding:20px;
+}
+
+#favorites::-webkit-scrollbar{
+    display:none;
+}
+
+.menu{
+
+display:flex;
+gap:25px;
+}
+
+.menu a{
+
+color:white;
+
+text-decoration:none;
+
+opacity:.8;
+}
+
+.menu a:hover{
+
+opacity:1;
+
+color:#00e5ff;
+}
+
+.live-popup{
+
+    position:fixed;
+
+    top:20px;
+    left:20px;
+
+    background:#333;
+
+    color:white;
+
+    padding:15px 20px;
+
+    border-radius:20px;
+
+    font-size:20px;
+
+    font-weight:600;
+
+    z-index:9999;
+
+    display:none;
+
+    box-shadow:
+    0 0 20px rgba(0,229,255,.4);
+}
+
+/* FOOTER */
+
+.footer{
+
+    margin-top:80px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #071120,
+        #0b1730,
+        #101827
+    );
+
+    border-top:
+    1px solid rgba(0,229,255,.2);
+
+    padding:50px 20px;
+
+    text-align:center;
+}
+
+.footer-logo{
+
+    font-size:36px;
+
+    font-weight:800;
+
+    color:#00e5ff;
+
+    text-shadow:
+    0 0 20px #00e5ff;
+
+    margin-bottom:15px;
+}
+
+.footer-text{
+
+    color:#a0aec0;
+
+    font-size:16px;
+
+    margin-bottom:25px;
+}
+
+.footer-social{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:25px;
+}
+
+.footer-social a{
+
+    text-decoration:none;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        45deg,
+        #00e5ff,
+        #7c3aed
+    );
+
+    padding:12px 24px;
+
+    border-radius:50px;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.footer-social a:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 0 20px rgba(0,229,255,.4);
+}
+
+.footer-bottom{
+
+    color:#718096;
+
+    font-size:14px;
+
+    padding-top:20px;
+
+    border-top:
+    1px solid rgba(255,255,255,.08);
+}
+
+.footer{
+    position:relative;
+}
+
+.footer::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:200px;
+    height:3px;
+
+    background:
+    linear-gradient(
+        90deg,
+        transparent,
+        #00e5ff,
+        transparent
+    );
+}
