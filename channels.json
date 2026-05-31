@@ -2,28 +2,28 @@
   {
     "name": "T-Sports",
     "category": "Sports",
-    "logo": "logo/tsports.png",
+    "logo": "tsports.png",
     "url": "http://203.18.159.115/TSPORTS/index.m3u8"
   },
 
   {
     "name": "FIFA TV",
     "category": "Sports",
-    "logo": "logo/fifa.png",
+    "logo": "fifa.png",
     "url": "https://a62dad94.wurl.com/manifest/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/b1b54934-fcc3-4345-a739-76137feab006/2.m3u8"
   },
 
   {
     "name": "STAR JALSHA HD",
     "category": "Entertainment",
-    "logo": "logo/jalsha.png",
+    "logo": "jalsha.png",
     "url": "http://203.18.159.115/STARJALSHAHD/index.m3u8"
   },
 
   {
     "name": "Discovery HD",
     "category": "Documentary",
-    "logo": "logo/discovery.png",
+    "logo": "discovery.png",
     "url": "http://203.18.159.115/DISCOVERYHD/index.m3u8"
   }
 ]
