@@ -610,3 +610,11 @@ color:#00e5ff;
 }
 
 }
+
+@media(max-width:768px){
+
+.menu{
+    display:none;
+}
+
+}
