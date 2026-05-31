@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>JOSH LIVE TV PRO</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.13.5/shaka-player.compiled.js"></script>
+</head>
+
+<body>
+
+    <div class="navbar">
+
+    <div class="logo">
+        JOSH TV
+    </div>
+    <div class="menu">
+
+<a href="#">Home</a>
+
+<a href="#">Live TV</a>
+
+<a href="#">Sports</a>
+
+<a href="#">Movies</a>
+
+</div>
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Search channel..."
+    >
+
+
+</div>
+
+<section class="hero">
+
+<div class="hero-overlay">
+
+<h1>JOSH Premium IPTV Experience</h1>
+
+<p>
+90+ Live Channels • Sports • FIFA • Movies • Entertainment
+</p>
+
+<button class="watch-btn">
+▶ Watch Now
+</button>
+
+</div>
+
+</section>
+
+
+
+
+<div class="player-container">
+
+    <video
+        id="video"
+        controls
+        autoplay>
+    </video>
+    <div class="player-info">
+
+    <span class="live-badge">
+        🔴 LIVE
+    </span>
+
+    
+
+    <h2 id="currentChannel">
+        Select Channel
+    </h2>
+
+</div>
+
+</div>
+<div class="categories">
+
+<button onclick="filterCategory('All')">
+All
+</button>
+
+<button onclick="filterCategory('News')">
+News
+</button>
+
+<button onclick="filterCategory('Sports')">
+Sports
+</button>
+
+<button onclick="filterCategory('Entertainment')">
+Entertainment
+</button>
+
+</div>
+
+
+<h2 class="section-title">
+❤️ Favorite Channels
+</h2>
+
+<div id="favorites" class="channel-grid">
+</div>
+
+<div id="channels" class="channel-grid">
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
