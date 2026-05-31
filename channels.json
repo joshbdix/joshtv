@@ -1,18 +1,18 @@
 [
+
   {
     "name": "FIFA TV",
     "category": "Sports",
     "logo": "fifa.png",
     "url": "https://a62dad94.wurl.com/manifest/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWV1X0ZJRkFQbHVzRW5nbGlzaF9ITFM/b1b54934-fcc3-4345-a739-76137feab006/2.m3u8"
   },
-  
+
   {
     "name": "T-Sports",
     "category": "Sports",
     "logo": "tsports.png",
-    "url": "https://tvsen7.aynaott.com/tsports-hd/index.m3u8"
+    "url": "https://tvsen7.aynaott.com/tsports-hd/tracks-v1a1/mono.ts.m3u8"
   },
-
 
   {
     "name": "STAR JALSHA HD",
@@ -22,9 +22,51 @@
   },
 
   {
-    "name": "TNT sports 1",
-    "category": "Documentary",
-    "logo": "discovery.png",
-    "url": "https://edge2.roarzone.net:8447/roarzone/edge2/star-sports-1/tracks-v1a1/mono.m3u8"
+    "name": "WWE HD",
+    "category": "Entertainment",
+    "logo": "wwe.png",
+    "url": "https://silenthillf.loreofeldenring.site/dailymotion/live/playlist/7.m3u8"
+  },
+
+  {
+    "name": "Fox Sports 2",
+    "category": "Sports",
+    "logo": "fs.png",
+    "url": "https://tvsen7.aynaott.com/foxsports2/index.m3u8"
+  },
+
+  {
+    "name": "PTV Sports",
+    "category": "Sports",
+    "logo": "ptv.png",
+    "url": "https://tvsen5.aynaott.com/PtvSports/index.m3u8"
+  },
+
+  {
+    "name": "ESPN",
+    "category": "Sports",
+    "logo": "espn.png",
+    "url": "https://tvsen5.aynaott.com/espn/index.m3u8"
+  },
+
+  {
+    "name": "Willow HD",
+    "category": "Sports",
+    "logo": "willow.jpg",
+    "url": "https://tvsen5.aynaott.com/willowhd/index.m3u8"
+  },
+
+  {
+    "name": "TSN 2",
+    "category": "Sports",
+    "logo": "tsn2.png",
+    "url": "https://tvsen7.aynaott.com/tsn2/tracks-v1a1/mono.ts.m3u8"
+  },
+
+  {
+    "name": "TSN 3",
+    "category": "Sports",
+    "logo": "tsn3.png",
+    "url": "https://tvsen7.aynaott.com/tsn3/tracks-v1a1/mono.ts.m3u8"
   }
 ]
