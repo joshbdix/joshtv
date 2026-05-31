@@ -10,7 +10,7 @@
     "name": "T-Sports",
     "category": "Sports",
     "logo": "tsports.png",
-    "url": "http://203.18.159.115/TSPORTS/index.m3u8"
+    "url": "https://tvsen7.aynaott.com/tsports-hd/index.m3u8"
   },
 
 
@@ -18,13 +18,13 @@
     "name": "STAR JALSHA HD",
     "category": "Entertainment",
     "logo": "jalsha.png",
-    "url": "http://203.18.159.115/STARJALSHAHD/index.m3u8"
+    "url": "https://tvsen7.aynaott.com/sjhdbd/index.m3u8"
   },
 
   {
-    "name": "Discovery HD",
+    "name": "TNT sports 1",
     "category": "Documentary",
     "logo": "discovery.png",
-    "url": "http://203.18.159.115/DISCOVERYHD/index.m3u8"
+    "url": "https://edge2.roarzone.net:8447/roarzone/edge5/tnt-sport-1/tracks-v1/mono.m3u8"
   }
 ]
