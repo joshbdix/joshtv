@@ -1,604 +1,280 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+let channels = [];
+
+let favorites =
+JSON.parse(
+    localStorage.getItem("favorites")
+) || [];
+
+const container =
+document.getElementById("channels");
+
+let player;
+
+// Load Channels
+async function loadChannels() {
+
+    const response =
+    await fetch("channels.json");
+
+    channels =
+    await response.json();
+
+    renderChannels(channels);
+
+    renderFavorites();
+
+    if (channels.length > 0) {
+
+        playChannel(channels[0].url);
+
+        document.getElementById(
+            "currentChannel"
+        ).innerText =
+        channels[0].name;
+    }
 }
 
-body{
+// Render Channels
+function renderChannels(list) {
 
-background:
+    container.innerHTML = "";
 
-radial-gradient(
-circle at top left,
-#00e5ff22,
-transparent 25%
-),
+    list.forEach(channel => {
 
-radial-gradient(
-circle at top right,
-#7c3aed22,
-transparent 25%
-),
+        const card =
+        document.createElement("div");
 
-radial-gradient(
-circle at bottom,
-#ff006e22,
-transparent 25%
-),
+        card.className =
+        "channel-card";
 
-#030712;
+        card.innerHTML = `
 
-color:white;
+            <button class="favorite-btn">
+                ❤️
+            </button>
+
+            <img src="${channel.logo}" alt="${channel.name}">
+
+            <div class="channel-name">
+                ${channel.name}
+            </div>
+
+        `;
+
+        const favBtn =
+        card.querySelector(".favorite-btn");
+
+        favBtn.onclick = (e) => {
+
+            e.stopPropagation();
+
+            toggleFavorite(channel);
+
+        };
+
+        card.onclick = () => {
+
+            playChannel(channel.url);
+
+            document.getElementById(
+                "currentChannel"
+            ).innerText =
+            channel.name;
+        };
+
+        container.appendChild(card);
+    });
 }
 
-/* NAVBAR */
+// Toggle Favorite
+function toggleFavorite(channel) {
 
-.navbar{
-    padding:20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.logo{
-    font-size:32px;
-    font-weight:700;
-    color:#00e5ff;
-    text-shadow:0 0 20px #00e5ff;
-}
-
-#search{
-    width:300px;
-    padding:12px;
-    border:none;
-    outline:none;
-    border-radius:12px;
-    background:#121b2f;
-    color:white;
-}
-
-/* HERO */
-
-.hero{
-
-    height:380px;
-
-    margin:20px;
-
-    border-radius:30px;
-
-    position:relative;
-
-    overflow:hidden;
-
-    background:
-    linear-gradient(
-        135deg,
-        #00e5ff22,
-        #7c3aed33,
-        #ff006e22
-    ),
-    radial-gradient(
-        circle at top right,
-        #00e5ff55,
-        transparent 30%
-    ),
-    radial-gradient(
-        circle at bottom left,
-        #7c3aed55,
-        transparent 35%
-    ),
-    #0b1220;
-
-    display:flex;
-    align-items:center;
-}
-
-.hero::before{
-
-    content:"";
-
-    position:absolute;
-
-    width:500px;
-    height:500px;
-
-    right:-150px;
-    top:-100px;
-
-    border-radius:50%;
-
-    background:
-    radial-gradient(
-        circle,
-        #00e5ff33,
-        transparent 70%
+    const exists =
+    favorites.find(
+        ch => ch.name === channel.name
     );
 
-    filter:blur(40px);
-}
+    if (exists) {
 
-.hero-overlay{
+        favorites =
+        favorites.filter(
+            ch => ch.name !== channel.name
+        );
 
-    position:relative;
+    } else {
 
-    z-index:2;
-
-    padding:60px;
-}
-
-.hero-tag{
-
-    display:inline-block;
-
-    background:#ff0033;
-
-    padding:8px 15px;
-
-    border-radius:30px;
-
-    font-size:13px;
-
-    font-weight:700;
-
-    margin-bottom:20px;
-}
-
-.hero h1{
-
-    font-size:60px;
-
-    line-height:1.1;
-
-    margin-bottom:15px;
-
-    font-weight:800;
-}
-
-.hero p{
-
-    font-size:20px;
-
-    opacity:.8;
-
-    margin-bottom:25px;
-}
-
-.watch-btn{
-
-    border:none;
-
-    padding:15px 30px;
-
-    border-radius:15px;
-
-    cursor:pointer;
-
-    color:white;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    background:
-    linear-gradient(
-        45deg,
-        #00e5ff,
-        #7c3aed
-    );
-
-    box-shadow:
-    0 0 25px rgba(0,229,255,.35);
-}
-
-.watch-btn:hover{
-
-    transform:translateY(-2px);
-
-    transition:.3s;
-}
-
-.hero-overlay{
-    padding:60px;
-}
-
-.hero h1{
-    font-size:55px;
-    font-weight:800;
-}
-
-.hero p{
-    margin-top:10px;
-    font-size:18px;
-    opacity:.85;
-}
-
-.watch-btn{
-    margin-top:20px;
-
-    padding:14px 30px;
-
-    border:none;
-    border-radius:15px;
-
-    background:
-    linear-gradient(
-        45deg,
-        #00e5ff,
-        #7c3aed
-    );
-
-    color:white;
-    font-size:16px;
-    font-weight:700;
-    cursor:pointer;
-}
-
-/* PLAYER */
-
-.player-container{
-    width:90%;
-    max-width:1200px;
-    margin:auto;
-}
-
-video{
-    width:100%;
-    height:auto;
-
-    object-fit:contain;
-
-    background:black;
-
-    border-radius:25px;
-
-    box-shadow:
-    0 0 40px rgba(0,229,255,.25);
-}
-
-.player-info{
-    padding:15px 5px;
-}
-
-.live-badge{
-    background:#ff0033;
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:bold;
-}
-
-#currentChannel{
-    margin-top:12px;
-    font-size:28px;
-}
-
-/* CATEGORY */
-
-.categories{
-    display:flex;
-    gap:10px;
-    padding:20px;
-    flex-wrap:wrap;
-}
-
-.categories button{
-    padding:10px 20px;
-
-    background:#111827;
-
-    border:none;
-    border-radius:12px;
-
-    color:white;
-    cursor:pointer;
-
-    transition:.3s;
-}
-
-.categories button:hover{
-    background:#00e5ff;
-    color:black;
-}
-
-/* SECTION */
-
-.section-title{
-    padding:30px;
-    font-size:24px;
-    font-weight:700;
-}
-
-/* CHANNEL GRID */
-
-.channel-grid{
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fill,minmax(220px,1fr));
-
-    gap:20px;
-
-    padding:20px;
-}
-
-/* CARD */
-
-.channel-card{
-
-    background:
-    linear-gradient(
-        145deg,
-        #101827,
-        #0b1220
-    );
-
-    border:1px solid #1d2940;
-
-    border-radius:25px;
-
-    padding:25px;
-
-    text-align:center;
-
-    cursor:pointer;
-
-    transition:.35s;
-}
-
-.channel-card:hover{
-
-    transform:
-    translateY(-8px)
-    scale(1.03);
-
-    border-color:#00e5ff;
-
-    box-shadow:
-    0 0 30px rgba(0,229,255,.25);
-}
-
-.channel-card img{
-    width:80px;
-    height:80px;
-    object-fit:contain;
-}
-
-.channel-name{
-    margin-top:15px;
-    font-weight:600;
-}
-
-/* MOBILE */
-
-@media(max-width:768px){
-
-    .navbar{
-        flex-direction:column;
-        gap:15px;
+        favorites.push(channel);
     }
 
-    #search{
-        width:100%;
-    }
-
-    .hero{
-        height:250px;
-    }
-
-    .hero h1{
-        font-size:32px;
-    }
-
-    .hero-overlay{
-        padding:25px;
-    }
-
-}
-
-.favorite-btn{
-
-    position:absolute;
-
-    top:10px;
-
-    right:10px;
-
-    background:none;
-
-    border:none;
-
-    color:white;
-
-    font-size:20px;
-
-    cursor:pointer;
-}
-
-#favorites{
-    display:flex;
-    gap:20px;
-    overflow-x:auto;
-    padding:20px;
-}
-
-#favorites::-webkit-scrollbar{
-    display:none;
-}
-
-.menu{
-
-display:flex;
-gap:25px;
-}
-
-.menu a{
-
-color:white;
-
-text-decoration:none;
-
-opacity:.8;
-}
-
-.menu a:hover{
-
-opacity:1;
-
-color:#00e5ff;
-}
-
-.live-popup{
-
-    position:fixed;
-
-    top:20px;
-    left:20px;
-
-    background:#333;
-
-    color:white;
-
-    padding:15px 20px;
-
-    border-radius:20px;
-
-    font-size:20px;
-
-    font-weight:600;
-
-    z-index:9999;
-
-    display:none;
-
-    box-shadow:
-    0 0 20px rgba(0,229,255,.4);
-}
-
-/* FOOTER */
-
-.footer{
-
-    margin-top:80px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #071120,
-        #0b1730,
-        #101827
+    localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
     );
 
-    border-top:
-    1px solid rgba(0,229,255,.2);
-
-    padding:50px 20px;
-
-    text-align:center;
+    renderFavorites();
 }
 
-.footer-logo{
+// Render Favorites
+function renderFavorites() {
 
-    font-size:36px;
+    const favContainer =
+    document.getElementById("favorites");
 
-    font-weight:800;
+    favContainer.innerHTML = "";
 
-    color:#00e5ff;
+    favorites.forEach(channel => {
 
-    text-shadow:
-    0 0 20px #00e5ff;
+        const card =
+        document.createElement("div");
 
-    margin-bottom:15px;
+        card.className =
+        "channel-card";
+
+        card.innerHTML = `
+
+            <img src="${channel.logo}" alt="${channel.name}">
+
+            <div class="channel-name">
+                ${channel.name}
+            </div>
+
+        `;
+
+        card.onclick = () => {
+
+            playChannel(channel.url);
+
+            document.getElementById(
+                "currentChannel"
+            ).innerText =
+            channel.name;
+        };
+
+        favContainer.appendChild(card);
+    });
 }
 
-.footer-text{
+let hls;
 
-    color:#a0aec0;
+function playChannel(url){
 
-    font-size:16px;
+    const video =
+    document.getElementById("video");
 
-    margin-bottom:25px;
+    if(hls){
+        hls.destroy();
+    }
+
+    if(Hls.isSupported()){
+
+        hls = new Hls({
+            enableWorker: true
+        });
+
+        hls.loadSource(url);
+
+        hls.attachMedia(video);
+
+        hls.on(
+            Hls.Events.MANIFEST_PARSED,
+            function(){
+
+                video.play()
+                .catch(()=>{});
+
+            }
+        );
+
+    }else if(
+        video.canPlayType(
+            "application/vnd.apple.mpegurl"
+        )
+    ){
+
+        video.src = url;
+
+        video.play()
+        .catch(()=>{});
+
+    }
 }
 
-.footer-social{
+// Search
+document
+.getElementById("search")
+.addEventListener("keyup", e => {
 
-    display:flex;
+    const text =
+    e.target.value.toLowerCase();
 
-    justify-content:center;
+    const filtered =
+    channels.filter(channel =>
 
-    gap:15px;
+        channel.name
+        .toLowerCase()
+        .includes(text)
 
-    flex-wrap:wrap;
-
-    margin-bottom:25px;
-}
-
-.footer-social a{
-
-    text-decoration:none;
-
-    color:white;
-
-    background:
-    linear-gradient(
-        45deg,
-        #00e5ff,
-        #7c3aed
     );
 
-    padding:12px 24px;
+    renderChannels(filtered);
+});
 
-    border-radius:50px;
+// Category Filter
+function filterCategory(category) {
 
-    font-weight:600;
+    if (category === "All") {
 
-    transition:.3s;
-}
+        renderChannels(channels);
 
-.footer-social a:hover{
+        return;
+    }
 
-    transform:translateY(-4px);
+    const filtered =
+    channels.filter(
 
-    box-shadow:
-    0 0 20px rgba(0,229,255,.4);
-}
+        channel =>
+        channel.category === category
 
-.footer-bottom{
-
-    color:#718096;
-
-    font-size:14px;
-
-    padding-top:20px;
-
-    border-top:
-    1px solid rgba(255,255,255,.08);
-}
-
-.footer{
-    position:relative;
-}
-
-.footer::before{
-
-    content:"";
-
-    position:absolute;
-
-    top:0;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:200px;
-    height:3px;
-
-    background:
-    linear-gradient(
-        90deg,
-        transparent,
-        #00e5ff,
-        transparent
     );
+
+    renderChannels(filtered);
 }
+
+// Start App
+loadChannels();
+
+
+
+
+const popup =
+document.getElementById("livePopup");
+
+const liveUsers =
+document.getElementById("liveUsers");
+
+const totalViews =
+document.getElementById("totalViews");
+
+function showLivePopup(){
+
+    liveUsers.innerText =
+    Math.floor(Math.random()*300)+50;
+
+    totalViews.innerText =
+    Math.floor(Math.random()*50000)+10000;
+
+    popup.style.display = "block";
+
+    setTimeout(()=>{
+
+        popup.style.display = "none";
+
+    },5000);
+
+}
+
+setInterval(()=>{
+
+    showLivePopup();
+
+},30000);
