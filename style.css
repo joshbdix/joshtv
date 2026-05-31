@@ -602,3 +602,11 @@ color:#00e5ff;
         transparent
     );
 }
+
+@media(max-width:768px){
+
+.hero{
+    display:none;
+}
+
+}
