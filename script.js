@@ -14,7 +14,7 @@ let player;
 async function loadChannels() {
 
     const response =
-    await fetch("https://rsinternet.com.bd/channels.php");
+    await fetch("channels.json");
 
     channels =
     await response.json();
