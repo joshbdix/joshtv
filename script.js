@@ -14,7 +14,7 @@ let player;
 async function loadChannels() {
 
     const response =
-    await fetch("channels.json");
+    await fetch("https://rsinternet.com.bd/channels.php");
 
     channels =
     await response.json();
@@ -25,13 +25,19 @@ async function loadChannels() {
 
     if (channels.length > 0) {
 
-        playChannel(channels[0].url);
+    const tokenResponse =
+    await fetch(channels[0].url);
 
-        document.getElementById(
-            "currentChannel"
-        ).innerText =
-        channels[0].name;
-    }
+    const tokenData =
+    await tokenResponse.json();
+
+    playChannel(tokenData.url);
+
+    document.getElementById(
+        "currentChannel"
+    ).innerText =
+    channels[0].name;
+}
 }
 
 // Render Channels
@@ -72,15 +78,21 @@ function renderChannels(list) {
 
         };
 
-        card.onclick = () => {
+card.onclick = async () => {
 
-            playChannel(channel.url);
+    const tokenResponse =
+    await fetch(channel.url);
 
-            document.getElementById(
-                "currentChannel"
-            ).innerText =
-            channel.name;
-        };
+    const tokenData =
+    await tokenResponse.json();
+
+    playChannel(tokenData.url);
+
+    document.getElementById(
+        "currentChannel"
+    ).innerText =
+    channel.name;
+};
 
         container.appendChild(card);
     });
@@ -140,15 +152,21 @@ function renderFavorites() {
 
         `;
 
-        card.onclick = () => {
+card.onclick = async () => {
 
-            playChannel(channel.url);
+    const tokenResponse =
+    await fetch(channel.url);
 
-            document.getElementById(
-                "currentChannel"
-            ).innerText =
-            channel.name;
-        };
+    const tokenData =
+    await tokenResponse.json();
+
+    playChannel(tokenData.url);
+
+    document.getElementById(
+        "currentChannel"
+    ).innerText =
+    channel.name;
+};
 
         favContainer.appendChild(card);
     });
@@ -243,7 +261,7 @@ function filterCategory(category) {
 // Start App
 loadChannels();
 
-
+showLivePopup();
 
 
 const popup =
@@ -338,4 +356,3 @@ seconds;
 function closeBanner(){
     document.getElementById("fifaBanner").style.display="none";
 }
-
