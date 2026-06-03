@@ -55,7 +55,12 @@
     "logo": "willow.jpg",
     "url": "https://tvsen5.aynaott.com/willowhd/index.m3u8"
   },
-
+  {
+    "name": "TSN 1",
+    "category": "Sports",
+    "logo": "tsn1.png",
+    "url": "https://tvsen7.aynaott.com/tsn1/index.m3u8"
+  },
   {
     "name": "TSN 2",
     "category": "Sports",
@@ -68,5 +73,11 @@
     "category": "Sports",
     "logo": "tsn3.png",
     "url": "https://tvsen7.aynaott.com/tsn3/tracks-v1a1/mono.ts.m3u8"
+  },
+    {
+    "name": "Star News",
+    "category": "News",
+    "logo": "starnews.png",
+    "url": "https://owrcovcrpy.gpcdn.net/bpk-tv/1710/output/1710-audio_113402_eng=113200-video=3224800.m3u8"
   }
 ]
